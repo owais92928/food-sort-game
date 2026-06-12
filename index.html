@@ -3,23 +3,63 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <title>Food Sort</title>
-    <meta name="description" content="Food Sort — built on Replit. Update this description to reflect the app." />
+    <title>Bird Sorting Puzzle</title>
+    <meta name="description" content="Bird Sorting Puzzle — built on Replit. Update this description to reflect the app." />
     <meta name="robots" content="index, follow" />
-    <meta property="og:title" content="Food Sort" />
-    <meta property="og:description" content="Food Sort — built on Replit. Update this description to reflect the app." />
+    <meta property="og:title" content="Bird Sorting Puzzle" />
+    <meta property="og:description" content="Bird Sorting Puzzle — built on Replit. Update this description to reflect the app." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Food Sort" />
-    <meta name="twitter:description" content="Food Sort — built on Replit. Update this description to reflect the app." />
-    <link rel="icon" type="image/svg+xml" href="burger.png" />
+    <meta name="twitter:title" content="Bird Sorting Puzzle" />
+    <meta name="twitter:description" content="Bird Sorting Puzzle — built on Replit. Update this description to reflect the app." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="assets/index-DBHcboBS.js"></script>
-    <link rel="stylesheet" crossorigin href="assets/index-Dw0gqLAV.css">
+    <script type="module" crossorigin src="/assets/index-DBHcboBS.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Dw0gqLAV.css">
   </head>
   <body>
     <div id="root"></div>
-  <script src="https://replit-cdn.com/replit-pill/replit-pill.global.js" data-referral-code="rlsvamk8i1mg" data-repl-id="7eb28cec-068c-420e-bcb7-a853ef16c1ca"></script></body>
+  <script src="https://replit-cdn.com/replit-pill/replit-pill.global.js" data-referral-code="rlsvamk8i1mg" data-repl-id="7eb28cec-068c-420e-bcb7-a853ef16c1ca"></script>
+
+<!-- --- START OF VIRTUAL COIN CODE --- -->
+<div style="position: fixed; top: 15px; right: 15px; font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; color: #ffd700; background: rgba(0,0,0,0.85); padding: 8px 18px; border-radius: 25px; z-index: 999999; border: 3px solid #ffd700; box-shadow: 0 0 15px rgba(255,215,0,0.6); display: flex; align-items: center; gap: 8px; pointer-events: none;">
+    <span>🪙</span> <span id="coin-count">0</span>
+</div>
+
+<script>
+    // 1. Initialize Wallet and load saved coins from browser cache
+    let coins = parseInt(localStorage.getItem("playerCoins")) || 0;
+    
+    function updateUI() {
+        const display = document.getElementById("coin-count");
+        if(display) display.innerText = coins;
+    }
+    updateUI(); // Run instantly when game opens
+
+    // 2. Function to give players coins
+    function addCoins(amount) {
+        coins += amount;
+        localStorage.setItem("playerCoins", coins); // Saves to device memory
+        updateUI();
+        console.log("Coins Earned! Current wallet: " + coins);
+    }
+    
+    // Expose functions to the global game window
+    window.addCoins = addCoins;
+    window.playerCoins = coins;
+
+    // 3. Automatically give 5 coins when clicking "Next" or "Claim" buttons
+    document.addEventListener("click", function(event) {
+        const elementText = event.target.innerText ? event.target.innerText.toLowerCase() : "";
+        const elementClass = event.target.className ? event.target.className.toLowerCase() : "";
+        
+        if (elementText.includes("next") || elementText.includes("claim") || elementClass.includes("success") || elementClass.includes("victory")) {
+            addCoins(5); // Gives 5 coins for completing a level!
+        }
+    });
+</script>
+<!-- --- END OF VIRTUAL COIN CODE --- -->
+</body>
 </html>
