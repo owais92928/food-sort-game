@@ -18,9 +18,36 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script type="module" crossorigin src="/food-sort-game/assets/index-DBHcboBS.js"></script>
     <link rel="stylesheet" crossorigin href="/food-sort-game/assets/index-Dw0gqLAV.css">
+    <script async src="https://googlesyndication.com" crossorigin="anonymous"></script>
+<script>
+  window.adsbygoogle = window.adsbygoogle || [];
+  let h5AdPlacementManager;
+
+  window.adsbygoogle.push({
+    google_ad_client: "ca-pub-3940256099942544", 
+    enable_h5_ads: true,
+    data_admob_interstitial-slot: "ca-app-pub-3940256099942544/1033173712", 
+    data_admob_rewarded-slot: "ca-app-pub-3940256099942544/5224354917",     
+    h5_ad_config: {
+      onAdPlacementReady: (placement) => {
+        h5AdPlacementManager = placement; 
+      }
+    }
+  });
+</script>
   </head>
   <body>
     <div id="root"></div>
+    <!-- Banner Placement beneath Level Header -->
+<div id="admob-header-banner" style="text-align:center; margin: 10px auto; width:100%; max-width:320px;">
+  <ins class="adsbygoogle"
+       style="display:inline-block; width:320px; height:50px"
+       data-ad-client="ca-pub-3940256099942544"
+       data-ad-slot="6300978111"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
   <script src="https://replit-cdn.com/replit-pill/replit-pill.global.js" data-referral-code="rlsvamk8i1mg" data-repl-id="7eb28cec-068c-420e-bcb7-a853ef16c1ca"></script>
 
 <!-- --- START OF VIRTUAL COIN CODE --- -->
@@ -30,7 +57,82 @@
 <script>
     // 1. Initialize Wallet and load saved coins from browser cache
     let coins = parseInt(localStorage.getItem("playerCoins")) || 0;
+    // Global tracking states mapped to browser cache storage
+window.coins = parseInt(localStorage.getItem("playerCoins")) || 100;
+
+// 💡 1. MAIN HINT CLICK SYSTEM
+window.handleHintClick = function() {
+    if (window.coins >= 15) {
+        // Let user choose between spending 15 coins or watching an Interstitial Ad
+        let choice = confirm("Unlock Hint!\n\nClick 'OK' to spend 15 Coins.\nClick 'Cancel' to Watch an Ad instead.");
+        
+        if (choice === true) {
+            window.coins -= 15;
+            localStorage.setItem("playerCoins", window.coins);
+            if (typeof window.updateUI === "function") window.updateUI();
+            window.showTheActualHint();
+            alert("15 Coins deducted! Hint unlocked.");
+        } else {
+            window.triggerInterstitialForHint();
+        }
+    } else {
+        // Not enough coins fallback option
+        alert("Not enough coins! You must watch an ad to get a hint.");
+        window.triggerInterstitialForHint();
+    }
+};
+
+// Interstitial Ad trigger for hints
+window.triggerInterstitialForHint = function() {
+    if (h5AdPlacementManager) {
+        h5AdPlacementManager.show({
+            adUnitId: "ca-app-pub-3940256099942544/1033173712", // Google Test Interstitial ID
+            onAdOpened: () => { console.log("Ad opened."); },
+            onAdClosed: () => {
+                window.showTheActualHint();
+                alert("Ad complete! Hint unlocked.");
+            },
+            onError: (error) => {
+                // Fail-safe so gameplay flow doesn't freeze
+                window.showTheActualHint();
+            }
+        });
+    } else {
+        alert("Ad engine is preparing. Try clicking again in a moment.");
+    }
+};
+
+// 🍽️ 2. MAIN ADD PLATE CLICK SYSTEM
+window.handleAddPlateClick = function() {
+    alert("To add an extra plate, you must watch a short video.");
     
+    if (h5AdPlacementManager) {
+        h5AdPlacementManager.show({
+            adUnitId: "ca-app-pub-3940256099942544/5224354917", // Google Test Rewarded ID
+            onRewardGranted: () => {
+                window.executeAddPlateLogic();
+                alert("Success! Extra plate added.");
+            },
+            onError: (error) => {
+                alert("Video failed to load. Please try again.");
+            }
+        });
+    } else {
+        alert("Ad engine is loading. Tap button again.");
+    }
+};
+
+// Placeholder bridges to link to your game's background functions
+window.showTheActualHint = function() {
+    console.log("Visual hint executed on layout.");
+    // Link your internal game code highlight here if available
+};
+
+window.executeAddPlateLogic = function() {
+    console.log("Extra plate container pushed onto game screen.");
+    // Link your internal game code to spawn another empty plate structure here
+};
+
     function updateUI() {
         const display = document.getElementById("coin-count");
         if(display) display.innerText = coins;
