@@ -82,24 +82,36 @@ window.handleHintClick = function() {
         window.triggerInterstitialForHint();
     }
 };
-
-// Interstitial Ad trigger for hints
+  
+// Rewarded Interstitial Ad trigger for hints
 window.triggerInterstitialForHint = function() {
-    if (h5AdPlacementManager) {
-        h5AdPlacementManager.show({
-            adUnitId: "ca-app-pub-3940256099942544/1033173712", // Google Test Interstitial ID
-            onAdOpened: () => { console.log("Ad opened."); },
-            onAdClosed: () => {
+    if (hSAdPlacementManager) {
+        hSAdPlacementManager.show({
+            // 1. UPDATED: Changed to the official Google Rewarded Interstitial Test ID
+            adUnitId: "ca-app-pub-3940256099942544/5354046379", 
+            
+            onAdOpened: () => { 
+                console.log("Rewarded Interstitial opened."); 
+            },
+            
+            // 2. NEW: This ensures the hint is ONLY unlocked if they watch the required time
+            onUserEarnedReward: (reward) => {
+                console.log("User successfully earned reward!");
                 window.showTheActualHint();
                 alert("Ad complete! Hint unlocked.");
             },
+            
+            // 3. UPDATED: Removed hint unlocking from here so skipping grants no reward
+            onAdClosed: () => {
+                console.log("Ad window closed.");
+            },
+            
             onError: (error) => {
-                // Fail-safe so gameplay flow doesn't freeze
+                console.error("Ad failed to load:", error);
+                // Fallback: If ad breaks during testing, unlock hint so gameplay doesn't freeze
                 window.showTheActualHint();
             }
         });
-    } else {
-        alert("Ad engine is preparing. Try clicking again in a moment.");
     }
 };
 
@@ -108,12 +120,17 @@ window.handleAddPlateClick = function() {
     alert("To add an extra plate, you must watch a short video.");
     
     if (h5AdPlacementManager) {
-        h5AdPlacementManager.show({
-            adUnitId: "ca-app-pub-3940256099942544/5224354917", // Google Test Rewarded ID
-            onRewardGranted: () => {
-                window.executeAddPlateLogic();
+                hSAdPlacementManager.show({
+            adUnitId: "ca-app-pub-3940256099942544/5224354917", 
+            
+            // Fix: Changed callback name to match your hint system structure
+            onUserEarnedReward: (reward) => {
+                if (typeof window.executeAddPlateLogic === "function") {
+                    window.executeAddPlateLogic();
+                }
                 alert("Success! Extra plate added.");
             },
+            
             onError: (error) => {
                 alert("Video failed to load. Please try again.");
             }
