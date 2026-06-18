@@ -174,7 +174,7 @@ let completedLevelsCount = 0;
 
 // Automatically handle ads and coins when clicking "Next" or "Claim"
 document.addEventListener("click", function(event) {
-    const elementText = event.target.innerText ? event.target.innerText.toLowerCase() : "";
+    const elementText = (event.target && event.target.innerText) ? event.target.innerText.toLowerCase() : "";
     
     // Detect if they clicked a button containing "next" or "claim"
     if (elementText.includes("next") || elementText.includes("claim")) {
