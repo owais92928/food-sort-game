@@ -177,7 +177,8 @@ document.addEventListener("click", function(event) {
     const elementText = (event.target && event.target.innerText) ? event.target.innerText.toLowerCase() : "";
     
     // Detect if they clicked a button containing "next" or "claim"
-    if (elementText.includes("next") || elementText.includes("claim")) {
+    if ((elementText.includes("next") || elementText.includes("claim")) && !elementText.includes("plate")) {
+
         
         // 1. Give them their 5 coins first
         addCoins(5); 
@@ -201,6 +202,11 @@ document.addEventListener("click", function(event) {
                     }
                 });
             }
+        }
+    }  else if (elementText.includes("plate")) {
+        console.log("Plate button caught! Opening rewarded video...");
+        if (typeof window.handleAddPlateClick === "function") {
+            window.handleAddPlateClick();
         }
     }
 });
