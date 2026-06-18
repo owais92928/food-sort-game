@@ -169,15 +169,41 @@ window.executeAddPlateLogic = function() {
     window.addCoins = addCoins;
     window.playerCoins = coins;
 
-    // 3. Automatically give 5 coins when clicking "Next" or "Claim" buttons
-    document.addEventListener("click", function(event) {
-        const elementText = event.target.innerText ? event.target.innerText.toLowerCase() : "";
-        const elementClass = event.target.className ? event.target.className.toLowerCase() : "";
+  // 3. Global level tracking counter variable
+let completedLevelsCount = 0;
+
+// Automatically handle ads and coins when clicking "Next" or "Claim"
+document.addEventListener("click", function(event) {
+    const elementText = event.target.innerText ? event.target.innerText.toLowerCase() : "";
+    
+    // Detect if they clicked a button containing "next" or "claim"
+    if (elementText.includes("next") || elementText.includes("claim")) {
         
-        if (elementText.includes("next") || elementText.includes("claim") || elementClass.includes("success") || elementClass.includes("victory")) {
-            addCoins(5); // Gives 5 coins for completing a level!
+        // 1. Give them their 5 coins first
+        addCoins(5); 
+        
+        // 2. Increment your level completion counter
+        completedLevelsCount++;
+        console.log("Levels completed this session: " + completedLevelsCount);
+        
+        // 3. If it's the 3rd level, interrupt with a standard interstitial ad
+        if (completedLevelsCount % 3 === 0) {
+            console.log("3rd level reached! Triggering interstitial...");
+            
+            if (typeof hSAdPlacementManager !== 'undefined') {
+                hSAdPlacementManager.show({
+                    adUnitId: "ca-app-pub-3940256099942544/1033173712", // Google Interstitial Test ID
+                    onAdClosed: () => {
+                        console.log("Level ad closed. Resuming game flow.");
+                    },
+                    onError: (error) => {
+                        console.error("Ad failed to load, bypassing:", error);
+                    }
+                });
+            }
         }
-    });
+    }
+});
 
 </script>
 <!-- --- END OF VIRTUAL COIN CODE --- -->
