@@ -60,13 +60,12 @@
     let coins = parseInt(localStorage.getItem("playerCoins")) || 0;
     // Global tracking states mapped to browser cache storage
 window.coins = parseInt(localStorage.getItem("playerCoins")) || 100;
+        window.coins = parseInt(document.getElementById("coin-count").innerText) || window.coins || 0;
 
 // 💡 1. MAIN HINT CLICK SYSTEM
 window.handleHintClick = function() {
-    if (window.coins >= 15) {
-        // Let user choose between spending 15 coins or watching an Interstitial Ad
-        let choice = confirm("Unlock Hint!\n\nClick 'OK' to spend 15 Coins.\nClick 'Cancel' to Watch an Ad instead.");
-        
+            let choice = confirm("Unlock Hint!\n\nClick 'OK' to spend 15 Coins.\nClick 'Cancel' to watch an Ad.");
+  
         if (choice === true) {
             window.coins -= 15;
             localStorage.setItem("playerCoins", window.coins);
