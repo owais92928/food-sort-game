@@ -174,43 +174,42 @@ let completedLevelsCount = 0;
 
 // Automatically handle ads and coins when clicking "Next" or "Claim"
 document.addEventListener("click", function(event) {
-    const elementText = (event.target && event.target.innerText) ? event.target.innerText.toLowerCase() : "";
+    // 1. Safe extraction of text from what was clicked and its parents
+    const target = event.target;
+    const clickedText = target.innerText ? target.innerText.toLowerCase() : "";
     
-    // Detect if they clicked a button containing "next" or "claim"
-    if ((elementText.includes("next") || elementText.includes("claim")) && !elementText.includes("plate")) {
+    // Look at parent containers up to 3 levels high to see if it's the plate element
+    const parent1Text = target.parentElement ? (target.parentElement.innerText || "").toLowerCase() : "";
+    const parent2Text = target.parentElement && target.parentElement.parentElement ? (target.parentElement.parentElement.innerText || "").toLowerCase() : "";
+    
+    // Combine them to check if the word "plate" or "extra" exists anywhere in the click zone
+    const isPlateZone = clickedText.includes("plate") || parent1Text.includes("plate") || parent2Text.includes("plate") || clickedText.includes("extra") || parent1Text.includes("extra");
 
-        
-        // 1. Give them their 5 coins first
-        addCoins(5); 
-        
-        // 2. Increment your level completion counter
-        completedLevelsCount++;
-        console.log("Levels completed this session: " + completedLevelsCount);
-        
-        // 3. If it's the 3rd level, interrupt with a standard interstitial ad
-        if (completedLevelsCount % 3 === 0) {
-            console.log("3rd level reached! Triggering interstitial...");
-            
-            if (typeof hSAdPlacementManager !== 'undefined') {
-                hSAdPlacementManager.show({
-                    adUnitId: "ca-app-pub-3940256099942544/1033173712", // Google Interstitial Test ID
-                    onAdClosed: () => {
-                        console.log("Level ad closed. Resuming game flow.");
-                    },
-                    onError: (error) => {
-                        console.error("Ad failed to load, bypassing:", error);
-                    }
-                });
-            }
-        }
-    }  else if (elementText.includes("plate")) {
-        console.log("Plate button caught! Opening rewarded video...");
+    // 2. Check the Plate Button zone first to give it highest priority
+    if (isPlateZone) {
+        console.log("Plate button successfully detected! Triggering rewarded ad flow...");
         if (typeof window.handleAddPlateClick === "function") {
             window.handleAddPlateClick();
         }
+    } 
+    // 3. Route to normal level completions only if it's completely outside the plate zone
+    else if (clickedText.includes("next") || clickedText.includes("claim")) {
+        addCoins(5);
+        completedLevelsCount++;
+        console.log("Levels completed this session: " + completedLevelsCount);
+        
+        if (completedLevelsCount % 3 === 0) {
+            console.log("3rd level reached! Triggering interstitial...");
+            if (typeof hSAdPlacementManager !== 'undefined') {
+                hSAdPlacementManager.show({
+                    adUnitId: "ca-app-pub-3940256099942544/1033173712",
+                    onAdClosed: () => { console.log("Level ad closed."); },
+                    onError: (error) => { console.error("Ad failed to load:", error); }
+                });
+            }
+        }
     }
 });
-
 </script>
 <!-- --- END OF VIRTUAL COIN CODE --- -->
 </body>
