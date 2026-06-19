@@ -171,27 +171,21 @@ window.executeAddPlateLogic = function() {
   // 3. Global level tracking counter variable
 let completedLevelsCount = 0;
 
-// Automatically handle ads and coins when clicking "Next" or "Claim"
 document.addEventListener("click", function(event) {
-    // 1. Safe extraction of text from what was clicked and its parents
     const target = event.target;
     const clickedText = target.innerText ? target.innerText.toLowerCase() : "";
     
-    // Look at parent containers up to 3 levels high to see if it's the plate element
     const parent1Text = target.parentElement ? (target.parentElement.innerText || "").toLowerCase() : "";
     const parent2Text = target.parentElement && target.parentElement.parentElement ? (target.parentElement.parentElement.innerText || "").toLowerCase() : "";
     
-    // Combine them to check if the word "plate" or "extra" exists anywhere in the click zone
     const isPlateZone = clickedText.includes("plate") || parent1Text.includes("plate") || parent2Text.includes("plate") || clickedText.includes("extra") || parent1Text.includes("extra");
 
-    // 2. Check the Plate Button zone first to give it highest priority
     if (isPlateZone) {
         console.log("Plate button successfully detected! Triggering rewarded ad flow...");
         if (typeof window.handleAddPlateClick === "function") {
             window.handleAddPlateClick();
         }
     } 
-    // 3. Route to normal level completions only if it's completely outside the plate zone
     else if (clickedText.includes("next") || clickedText.includes("claim")) {
         addCoins(5);
         completedLevelsCount++;
