@@ -39,11 +39,11 @@
   </head>
   <body>
     <div id="root"></div>
-    <!-- Banner Placement beneath Level Header -->
-<div id="admob-header-banner" style="text-align:center; margin: 10px auto; width:100%; max-width:320px;">
+    <!-- Fixed Position Banner Ad Overlay -->
+<div id="admob-header-banner" style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 9999; width: 320px; height: 50px; text-align: center;">
   <ins class="adsbygoogle"
-       style="display:inline-block; width:320px; height:50px"
-       data-ad-client="ca-pub-3940256099942544"
+       style="display:inline-block;width:320px;height:50px"
+       data-ad-client="ca-pub-3940256099425544"
        data-ad-slot="6300978111"></ins>
   <script>
        (adsbygoogle = window.adsbygoogle || []).push({});
@@ -72,28 +72,43 @@ window.handleHintClick = function() {
             localStorage.setItem("playerCoins", window.coins);
             if (typeof window.updateUI === "function") window.updateUI();
             window.showTheActualHint();
-            alert("15 Coins deducted! Hint unlocked.");
-        } else {
+                   } else {
+            // Not enough coins fallback option
+            alert("Not enough coins! You must watch an ad to get a hint.");
             window.triggerInterstitialForHint();
         }
     } else {
-        // Not enough coins fallback option
-        alert("Not enough coins! You must watch an ad to get a hint.");
+        // User clicked Cancel -> Explicit choice to watch an ad
         window.triggerInterstitialForHint();
     }
-};
-  
+// Rewarded Interstitial Ad trigger for hints
 // Rewarded Interstitial Ad trigger for hints
 window.triggerInterstitialForHint = function() {
-    if (hSAdPlacementManager) {
-        hSAdPlacementManager.show({
-            // 1. UPDATED: Changed to the official Google Rewarded Interstitial Test ID
-            adUnitId: "ca-app-pub-3940256099942544/5354046379", 
-            
-            onAdOpened: () => { 
-                console.log("Rewarded Interstitial opened."); 
+    if (typeof h5AdPlacementManager !== "undefined" && h5AdPlacementManager) {
+        h5AdPlacementManager.show({
+            adUnitId: "ca-pub-3940256099425544/5354046379",
+            onAdOpened: () => {
+                console.log("Rewarded Interstitial opened.");
             },
-            
+            onAdClosed: () => {
+                console.log("Rewarded Interstitial closed.");
+            },
+            onUserEarnedReward: (reward) => {
+                console.log("Reward earned:", reward);
+                // UNLOCK HINT ONLY IF WATCHED SUCCESSFULLY
+                if (typeof window.showTheActualHint === "function") {
+                    window.showTheActualHint();
+                }
+                alert("Ad watched! Hint unlocked.");
+            }
+        });
+    } else {
+        // Fallback for local testing without internet/API
+        if (typeof window.showTheActualHint === "function") {
+            window.showTheActualHint();
+        }
+    }
+};
             // 2. NEW: This ensures the hint is ONLY unlocked if they watch the required time
             onUserEarnedReward: (reward) => {
                 console.log("User successfully earned reward!");
@@ -150,24 +165,25 @@ window.executeAddPlateLogic = function() {
     console.log("Extra plate container pushed onto game screen.");
     // Link your internal game code to spawn another empty plate structure here
 };
+   function updateUI() {
+    const display = document.getElementById("coin-count");
+    if (display) display.innerText = window.coins;
+}
 
-    function updateUI() {
-        const display = document.getElementById("coin-count");
-        if(display) display.innerText = coins;
-    }
-    updateUI(); // Run instantly when game opens
+updateUI(); // Run instantly when game opens
 
-    // 2. Function to give players coins
-    function addCoins(amount) {
-        coins += amount;
-        localStorage.setItem("playerCoins", coins); // Saves to device memory
-        updateUI();
-        console.log("Coins Earned! Current wallet: " + coins);
-    }
+// 2. Function to give players coins
+function addCoins(amount) {
+    window.coins += amount;
     
+    localStorage.setItem("playerCoins", window.coins); // Saves to device memory
+    updateUI();
+    
+    console.log("Coins Earned! Current wallet: " + window.coins);
+}    
     // Expose functions to the global game window
     window.addCoins = addCoins;
-    window.playerCoins = coins;
+    window.playerCoins = window.coins;
 
   // 3. Global level tracking counter variable
 let completedLevelsCount = 0;
@@ -187,23 +203,31 @@ document.addEventListener("click", function(event) {
             window.handleAddPlateClick();
         }
     } 
-    else if (clickedText.includes("next") || clickedText.includes("claim")) {
-        addCoins(5);
+        else if (clickedText.includes("next") || clickedText.includes("claim")) {
+        addCoins(5); // Fixes your coin missing problem automatically!
         completedLevelsCount++;
         console.log("Levels completed this session: " + completedLevelsCount);
         
+        // 1. Check if 3 levels have been completed inside the click event
         if (completedLevelsCount % 3 === 0) {
-            console.log("3rd level reached! Triggering interstitial...");
-            if (typeof hSAdPlacementManager !== 'undefined') {
-                hSAdPlacementManager.show({
-                    adUnitId: "ca-app-pub-3940256099942544/1033173712",
-                    onAdClosed: () => { console.log("Level ad closed."); },
-                    onError: (error) => { console.error("Ad failed to load:", error); }
+            if (typeof h5AdPlacementManager !== "undefined" && h5AdPlacementManager) {
+                h5AdPlacementManager.show({
+                    adUnitId: "ca-app-pub-3940256099425544/1033173712", // Standard Test ID
+                    onAdOpened: () => {
+                        console.log("Level Interstitial ad opened.");
+                    },
+                    onAdClosed: () => {
+                        console.log("Level Interstitial closed. Resuming game.");
+                    },
+                    onError: (error) => {
+                        console.error("Interstitial failed to load:", error);
+                    }
                 });
+            } else {
+                console.log("Sandbox Fallback: Interstitial ad triggered (Every 3 levels)!");
             }
         }
-    }
-});
+    } // This brace closes the next/claim button block safely
 </script>
 <!-- --- END OF VIRTUAL COIN CODE --- -->
 </body>
