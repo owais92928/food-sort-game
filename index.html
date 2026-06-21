@@ -60,7 +60,8 @@
     let coins = parseInt(localStorage.getItem("playerCoins")) || 0;
     // Global tracking states mapped to browser cache storage
 window.coins = parseInt(localStorage.getItem("playerCoins")) || 100;
-        window.coins = parseInt(document.getElementById("coin-count").innerText) || window.coins || 0;
+
+  document.getElementById("coin-count").innerText = window.coins;
 
 // 💡 1. MAIN HINT CLICK SYSTEM
 window.handleHintClick = function() {
