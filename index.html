@@ -51,58 +51,7 @@
 </div>
   <script src="https://replit-cdn.com/replit-pill/replit-pill.global.js" data-referral-code="rlsvamk8i1mg" data-repl-id="7eb28cec-068c-420e-bcb7-a853ef16c1ca"></script>
 
-<!-- --- START OF VIRTUAL COIN CODE --- -->
-<div style="position: fixed; top: 15px; right: 15px; font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; color: #ffd700; background: rgba(0,0,0,0.85); padding: 8px 18px; border-radius: 25px; z-index: 999999; border: 3px solid #ffd700; box-shadow: 0 0 15px rgba(255,215,0,0.6); display: flex; align-items: center; gap: 8px; pointer-events: none;">
-    <span>🪙</span> <span id="coin-count">0</span>
-</div> 
-<script>
-    // 1. Initialize Wallet and load saved coins from browser cache
-    let coins = parseInt(localStorage.getItem("playerCoins")) || 0;
-    // Global tracking states mapped to browser cache storage
-window.coins = parseInt(localStorage.getItem("playerCoins")) || 100;
 
-  document.getElementById("coin-count").innerText = window.coins;
-
-// 1. Initialize Wallet and load saved coins from browser cache
-window.coins = parseInt(localStorage.getItem("playerCoins")) || 100;
-
-// Safely update the HTML text once the page elements are ready
-window.addEventListener("DOMContentLoaded", () => {
-    const coinElement = document.getElementById("coin-count");
-    if (coinElement) {
-        coinElement.innerText = window.coins;
-    }
-});
-
-// // 1. MAIN HINT CLICK SYSTEM
-window.handleHintClick = function() {
-    let choice = confirm("Unlock Hint!\n\nClick 'OK' to spend 15 Coins.\nClick 'Cancel' to watch an Ad.");
-    
-    if (choice === true) {
-        if (window.coins >= 15) {
-            window.coins -= 15;
-            
-            // Update the display immediately so the player sees the coins drop
-            const coinElement = document.getElementById("coin-count");
-            if (coinElement) {
-                coinElement.innerText = window.coins;
-            }
-            
-            localStorage.setItem("playerCoins", window.coins);
-            if (typeof window.updateUI === "function") {
-                window.updateUI();
-            }
-            window.showTheActualHint();
-        } else {
-            // This else runs if they don't have 15 coins
-            alert("Not enough coins! You must watch an ad to get a hint.");
-            window.triggerInterstitialForHint();
-        }
-    } else {
-        // This else runs if they clicked "Cancel" on the confirmation box
-        window.triggerInterstitialForHint();
-    }
-};
 // Rewarded Interstitial Ad trigger for hints
 window.triggerInterstitialForHint = function() {
     if (typeof h5AdPlacementManager !== "undefined" && h5AdPlacementManager) {
@@ -120,7 +69,6 @@ window.triggerInterstitialForHint = function() {
                 if (typeof window.showTheActualHint === "function") {
                     window.showTheActualHint();
                 }
-                alert("Ad watched! Hint unlocked.");
             }
         });
     } else {
