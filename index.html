@@ -74,7 +74,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// 1. MAIN HINT CLICK SYSTEM
+// // 1. MAIN HINT CLICK SYSTEM
 window.handleHintClick = function() {
     let choice = confirm("Unlock Hint!\n\nClick 'OK' to spend 15 Coins.\nClick 'Cancel' to watch an Ad.");
     
@@ -87,8 +87,11 @@ window.handleHintClick = function() {
             if (coinElement) {
                 coinElement.innerText = window.coins;
             }
-               localStorage.setItem("playerCoins", window.coins);
-            if (typeof window.updateUI === "function") window.updateUI();
+            
+            localStorage.setItem("playerCoins", window.coins);
+            if (typeof window.updateUI === "function") {
+                window.updateUI();
+            }
             window.showTheActualHint();
         } else {
             // This else runs if they don't have 15 coins
@@ -99,7 +102,7 @@ window.handleHintClick = function() {
         // This else runs if they clicked "Cancel" on the confirmation box
         window.triggerInterstitialForHint();
     }
-};        
+};
 // Rewarded Interstitial Ad trigger for hints
 window.triggerInterstitialForHint = function() {
     if (typeof h5AdPlacementManager !== "undefined" && h5AdPlacementManager) {
