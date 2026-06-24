@@ -134,26 +134,6 @@ window.executeAddPlateLogic = function() {
     console.log("Extra plate container pushed onto game screen.");
     // Link your internal game code to spawn another empty plate structure here
 };
-   function updateUI() {
-    const display = document.getElementById("coin-count");
-    if (display) display.innerText = window.coins;
-}
-
-updateUI(); // Run instantly when game opens
-
-// 2. Function to give players coins
-function addCoins(amount) {
-    window.coins += amount;
-    
-    localStorage.setItem("playerCoins", window.coins); // Saves to device memory
-    updateUI();
-    
-    console.log("Coins Earned! Current wallet: " + window.coins);
-}    
-    // Expose functions to the global game window
-    window.addCoins = addCoins;
-    window.playerCoins = window.coins;
-
   // 3. Global level tracking counter variable
 let completedLevelsCount = 0;
 
@@ -173,8 +153,7 @@ document.addEventListener("click", function(event) {
         }
     } 
         else if (clickedText.includes("next") || clickedText.includes("claim")) {
-        addCoins(5); // Fixes your coin missing problem automatically!
-        completedLevelsCount++;
+         completedLevelsCount++;
         console.log("Levels completed this session: " + completedLevelsCount);
         
         // 1. Check if 3 levels have been completed inside the click event
