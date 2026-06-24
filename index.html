@@ -63,24 +63,43 @@ window.coins = parseInt(localStorage.getItem("playerCoins")) || 100;
 
   document.getElementById("coin-count").innerText = window.coins;
 
-// 💡 1. MAIN HINT CLICK SYSTEM
+// 1. Initialize Wallet and load saved coins from browser cache
+window.coins = parseInt(localStorage.getItem("playerCoins")) || 100;
+
+// Safely update the HTML text once the page elements are ready
+window.addEventListener("DOMContentLoaded", () => {
+    const coinElement = document.getElementById("coin-count");
+    if (coinElement) {
+        coinElement.innerText = window.coins;
+    }
+});
+
+// 1. MAIN HINT CLICK SYSTEM
 window.handleHintClick = function() {
-            let choice = confirm("Unlock Hint!\n\nClick 'OK' to spend 15 Coins.\nClick 'Cancel' to watch an Ad.");
-  
-        if (choice === true) {
+    let choice = confirm("Unlock Hint!\n\nClick 'OK' to spend 15 Coins.\nClick 'Cancel' to watch an Ad.");
+    
+    if (choice === true) {
+        if (window.coins >= 15) {
             window.coins -= 15;
+            
+            // Update the display immediately so the player sees the coins drop
+            const coinElement = document.getElementById("coin-count");
+            if (coinElement) {
+                coinElement.innerText = window.coins;
+            }
+            
             localStorage.setItem("playerCoins", window.coins);
             if (typeof window.updateUI === "function") window.updateUI();
             window.showTheActualHint();
-                   } else {
-            // Not enough coins fallback option
+        } else {
             alert("Not enough coins! You must watch an ad to get a hint.");
             window.triggerInterstitialForHint();
         }
     } else {
-        // User clicked Cancel -> Explicit choice to watch an ad
+        // User clicked Cancel -> Watch an ad
         window.triggerInterstitialForHint();
     }
+};
 // Rewarded Interstitial Ad trigger for hints
 // Rewarded Interstitial Ad trigger for hints
 window.triggerInterstitialForHint = function() {
