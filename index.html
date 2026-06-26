@@ -85,15 +85,28 @@
         const btn = document.getElementById('mute-toggle');
         let gainNode = null;
 
-        // Intercept AudioContext so we can attach a master gain node
+        // Intercept AudioContext and override ctx.destination to be our gain node.
+        // This forces ALL audio sources that connect to ctx.destination to flow
+        // through the gain node, so setting gain.value=0 mutes everything.
         const OriginalAudioContext = window.AudioContext || window.webkitAudioContext;
         if (OriginalAudioContext) {
+          const realDestinationDescriptor = Object.getOwnPropertyDescriptor(
+            OriginalAudioContext.prototype, 'destination'
+          );
           const ContextProxy = function(...args) {
             const ctx = new OriginalAudioContext(...args);
-            gainNode = ctx.createGain();
-            gainNode.connect(ctx.destination);
-            // Patch ctx.destination to route through gainNode
-            Object.defineProperty(ctx, '_muteGain', { value: gainNode });
+            const realDest = realDestinationDescriptor
+              ? realDestinationDescriptor.get.call(ctx)
+              : ctx.destination;
+            const gain = ctx.createGain();
+            gain.connect(realDest);
+            gainNode = gain;
+            // Shadow ctx.destination with our gain node so all
+            // source.connect(ctx.destination) calls route through it
+            Object.defineProperty(ctx, 'destination', {
+              get: () => gain,
+              configurable: true
+            });
             return ctx;
           };
           ContextProxy.prototype = OriginalAudioContext.prototype;
