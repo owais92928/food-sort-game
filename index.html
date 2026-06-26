@@ -18,157 +18,138 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script type="module" crossorigin src="/food-sort-game/assets/index-DBHcboBS.js"></script>
     <link rel="stylesheet" crossorigin href="/food-sort-game/assets/index-Dw0gqLAV.css">
-    <script async src="https://googlesyndication.com" crossorigin="anonymous"></script>
-<script>
-  window.adsbygoogle = window.adsbygoogle || [];
-  let h5AdPlacementManager;
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" crossorigin="anonymous"></script>
+    <script>
+      window.adsbygoogle = window.adsbygoogle || [];
+      let h5AdPlacementManager;
 
-  window.adsbygoogle.push({
-    google_ad_client: "ca-pub-3940256099942544", 
-    enable_h5_ads: true,
-    "data_admob_interstitial-slot": "ca-app-pub-3940256099942544/1033173712", 
-    "data_admob_rewarded-slot": "ca-app-pub-3940256099942544/5224354917",     
-    h5_ad_config: {
-      onAdPlacementReady: (placement) => {
-        h5AdPlacementManager = placement; 
-      }
-    }
-  });
-</script>
-</head>
-<body>
+      window.adsbygoogle.push({
+        google_ad_client: "ca-pub-3940256099942544",
+        enable_h5_ads: true,
+        "data_admob_interstitial-slot": "ca-app-pub-3940256099942544/1033173712",
+        "data_admob_rewarded-slot": "ca-app-pub-3940256099942544/5224354917",
+        h5_ad_config: {
+          onAdPlacementReady: (placement) => {
+            h5AdPlacementManager = placement;
+          }
+        }
+      });
+    </script>
+  </head>
+  <body>
     <div id="root"></div>
-    <!-- Fixed Position Banner Ad Overlay -->
-<div id="admob-header-banner" style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 9999; width: 320px; height: 50px; text-align: center;">
-  <ins class="adsbygoogle"
-       style="display:inline-block;width:320px;height:50px"
-       data-ad-client="ca-pub-3940256099425544"
-       data-ad-slot="6300978111"></ins>
-  <script>
-       (adsbygoogle = window.adsbygoogle || []).push({});
-  </script>
-</div>
-  <script src="https://replit-cdn.com/replit-pill/replit-pill.global.js" data-referral-code="rlsvamk8i1mg" data-repl-id="7eb28cec-068c-420e-bcb7-a853ef16c1ca"></script>
 
-// Rewarded Interstitial Ad trigger for hints
-window.triggerInterstitialForHint = function() {
-    if (typeof h5AdPlacementManager !== "undefined" && h5AdPlacementManager) {
-        h5AdPlacementManager.requestAdPlacement({
-            adUnitId: "ca-pub-3940256099425544/5354046379",
+    <!-- Fixed Position Banner Ad Overlay -->
+    <div id="admob-header-banner" style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 9999; width: 320px; height: 50px; text-align: center;">
+      <ins class="adsbygoogle"
+           style="display:inline-block;width:320px;height:50px"
+           data-ad-client="ca-pub-3940256099942544"
+           data-ad-slot="6300978111"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+
+    <script src="https://replit-cdn.com/replit-pill/replit-pill.global.js" data-referral-code="rlsvamk8i1mg" data-repl-id="7eb28cec-068c-420e-bcb7-a853ef16c1ca"></script>
+
+    <script>
+      // 1. Rewarded ad trigger for hints
+      window.triggerInterstitialForHint = function() {
+        if (typeof h5AdPlacementManager !== "undefined" && h5AdPlacementManager) {
+          h5AdPlacementManager.requestAdPlacement({
+            adUnitId: "ca-app-pub-3940256099942544/5354046379",
             onAdOpened: () => {
-                console.log("Rewarded Interstitial opened.");
+              console.log("Rewarded Interstitial opened.");
             },
             onAdClosed: () => {
-                console.log("Rewarded Interstitial closed.");
+              console.log("Rewarded Interstitial closed.");
             },
             onUserEarnedRewardListener: (reward) => {
-                console.log("Reward earned:", reward);
-                // UNLOCK HINT ONLY IF WATCHED SUCCESSFULLY
-                if {typeof window.showTheActualHint === "function"} {
-                    window.showTheActualHint();
-                }
-            }
-        });
-    } else {
-        // Fallback for local testing without internet/API
-        if {typeof window.showTheActualHint === "function"} {
-            window.showTheActualHint();
-        }
-    }
-};
-            // 2. NEW: This ensures the hint is ONLY unlocked if they watch the required time
-            onUserEarnedRewardListener: (reward) => {
-                console.log("User successfully earned reward!");
+              console.log("Reward earned:", reward);
+              if (typeof window.showTheActualHint === "function") {
                 window.showTheActualHint();
-                alert("Ad complete! Hint unlocked.");
-            },
-            // 3. UPDATED: Removed hint unlocking from here so skipping grants no reward
-      onAdClosed: () => {
-        console.log("Ad window closed.");
-      }
-    });
-  } else {
-    // Fallback: If ad breaks during testing, unlock hint so gameplay doesn't freeze
-    if (typeof window.showTheActualHint === "function") {
-      window.showTheActualHint();
-    }
-  }
-};           
-// 🍽️ 2. MAIN ADD PLATE CLICK SYSTEM
-window.handleAddPlateClick = function() {
-    alert("To add an extra plate, you must watch a short video.");
-    
-    if (h5AdPlacementManager) {
-                hSAdPlacementManager.show({
-            adUnitId: "ca-app-pub-3940256099942544/5224354917", 
-            
-            // Fix: Changed callback name to match your hint system structure
+              }
+            }
+          });
+        } else {
+          // Fallback for local testing without internet/API
+          if (typeof window.showTheActualHint === "function") {
+            window.showTheActualHint();
+          }
+        }
+      };
+
+      // 2. Add Plate click system — rewarded ad for extra plate
+      window.handleAddPlateClick = function() {
+        alert("To add an extra plate, you must watch a short video.");
+
+        if (h5AdPlacementManager) {
+          h5AdPlacementManager.show({
+            adUnitId: "ca-app-pub-3940256099942544/5224354917",
             onUserEarnedReward: (reward) => {
-                if {typeof window.executeAddPlateLogic === "function"} {
-                    window.executeAddPlateLogic();
-                }
-                alert("Success! Extra plate added.");
+              if (typeof window.executeAddPlateLogic === "function") {
+                window.executeAddPlateLogic();
+              }
+              alert("Success! Extra plate added.");
             },
             onError: (error) => {
-                alert("Video failed to load. Please try again.");
+              alert("Video failed to load. Please try again.");
             }
-        });
-    } else {
-        alert("Ad engine is loading. Tap button again.");
-    }
-};
-// Placeholder bridges to link to your game's background functions
-window.showTheActualHint = function() {
-    console.log("Visual hint executed on layout.");
-    // Link your internal game code highlight here if available
-};
-window.executeAddPlateLogic = function() {
-    console.log("Extra plate container pushed onto game screen.");
-    // Link your internal game code to spawn another empty plate structure here
-};
-  // 3. Global level tracking counter variable
-let completedLevelsCount = 0;
+          });
+        } else {
+          alert("Ad engine is loading. Tap button again.");
+        }
+      };
 
-document.addEventListener("click", function(event) {
-    const target = event.target;
-    const clickedText = target.innerText ? target.innerText.toLowerCase() : "";
-    
-    const parent1Text = target.parentElement ? (target.parentElement.innerText || "").toLowerCase() : "";
-    const parent2Text = target.parentElement && target.parentElement.parentElement ? (target.parentElement.parentElement.innerText || "").toLowerCase() : "";
-    
-       const isPlateZone = clickedText.includes("plate") || 
-                        parent1Text.includes("plate") || 
-                        parent2Text.includes("plate");
+      // Placeholder bridges to link to your game's background functions
+      window.showTheActualHint = function() {
+        console.log("Visual hint executed on layout.");
+      };
 
-    if (isPlateZone) {
-        console.log("Plate button successfully detected! Triggering rewarded ad flow...");
-        window.handleAddPlateClick();
-    } 
-   else if (clickedText.includes("next") || clickedText.includes("claim")) {
-    completedLevelCount++;
-    console.log("Levels completed this session: " + completedLevelCount);
-    
-    // 1. Check if 3 levels have been completed (Moved INSIDE this click event)
-    if (completedLevelCount > 0 && completedLevelCount % 3 === 0) {
-        if (typeof h5AdPlacementManager !== "undefined" && h5AdPlacementManager) {
-            h5AdPlacementManager.show({
-                adUnitId: "ca-app-pub-3940256099425544/1033173712", // Standard Test ID
+      window.executeAddPlateLogic = function() {
+        console.log("Extra plate container pushed onto game screen.");
+      };
+
+      // 3. Global level tracking — interstitial every 3 levels
+      let completedLevelCount = 0;
+
+      document.addEventListener("click", function(event) {
+        const target = event.target;
+        const clickedText = target.innerText ? target.innerText.toLowerCase() : "";
+        const parent1Text = target.parentElement ? (target.parentElement.innerText || "").toLowerCase() : "";
+        const parent2Text = target.parentElement && target.parentElement.parentElement ? (target.parentElement.parentElement.innerText || "").toLowerCase() : "";
+
+        const isPlateZone = clickedText.includes("plate") ||
+                            parent1Text.includes("plate") ||
+                            parent2Text.includes("plate");
+
+        if (isPlateZone) {
+          console.log("Plate button detected! Triggering rewarded ad flow...");
+          window.handleAddPlateClick();
+        } else if (clickedText.includes("next") || clickedText.includes("claim")) {
+          completedLevelCount++;
+          console.log("Levels completed this session: " + completedLevelCount);
+
+          if (completedLevelCount > 0 && completedLevelCount % 3 === 0) {
+            if (typeof h5AdPlacementManager !== "undefined" && h5AdPlacementManager) {
+              h5AdPlacementManager.show({
+                adUnitId: "ca-app-pub-3940256099942544/1033173712",
                 onAdOpened: () => {
-                    console.log("Level Interstitial ad opened.");
+                  console.log("Level Interstitial ad opened.");
                 },
                 onAdClosed: () => {
-                        console.log("Level Interstitial closed. Resuming game.");
-                    },
-                    onError: (error) => {
-                        console.error("Interstitial failed to load:", error);
-                    }
-                });
+                  console.log("Level Interstitial closed. Resuming game.");
+                },
+                onError: (error) => {
+                  console.error("Interstitial failed to load:", error);
+                }
+              });
             } else {
-                console.log("Sandbox Fallback: Interstitial ad triggered (Every 3 levels)!");
+              console.log("Sandbox Fallback: Interstitial ad triggered (Every 3 levels)!");
             }
+          }
         }
-    } // This brace closes the next/claim button block safely
-});
-</script>
-</body>
+      });
+    </script>
+  </body>
 </html>
