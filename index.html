@@ -46,7 +46,12 @@
            data-ad-client="ca-pub-3940256099942544"
            data-ad-slot="6300978111"></ins>
       <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
+        (function() {
+          var ins = document.querySelector('ins.adsbygoogle');
+          if (ins && !ins.getAttribute('data-adsbygoogle-status')) {
+            (window.adsbygoogle = window.adsbygoogle || []).push({});
+          }
+        })();
       </script>
     </div>
 
