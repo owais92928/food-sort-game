@@ -52,6 +52,74 @@
 
     <script src="https://replit-cdn.com/replit-pill/replit-pill.global.js" data-referral-code="rlsvamk8i1mg" data-repl-id="7eb28cec-068c-420e-bcb7-a853ef16c1ca"></script>
 
+    <!-- Mute / Unmute Toggle Button -->
+    <button id="mute-toggle" aria-label="Mute sound" style="
+      position: fixed;
+      bottom: 18px;
+      right: 18px;
+      z-index: 10000;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(6px);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      transition: background 0.2s;
+    ">🔊</button>
+
+    <script>
+      // ---- Mute / Unmute system ----
+      (function() {
+        let isMuted = false;
+        const btn = document.getElementById('mute-toggle');
+        let gainNode = null;
+
+        // Intercept AudioContext so we can attach a master gain node
+        const OriginalAudioContext = window.AudioContext || window.webkitAudioContext;
+        if (OriginalAudioContext) {
+          const ContextProxy = function(...args) {
+            const ctx = new OriginalAudioContext(...args);
+            gainNode = ctx.createGain();
+            gainNode.connect(ctx.destination);
+            // Patch ctx.destination to route through gainNode
+            Object.defineProperty(ctx, '_muteGain', { value: gainNode });
+            return ctx;
+          };
+          ContextProxy.prototype = OriginalAudioContext.prototype;
+          window.AudioContext = ContextProxy;
+          if (window.webkitAudioContext) window.webkitAudioContext = ContextProxy;
+        }
+
+        function applyMute(muted) {
+          // Mute all current and future <audio> / <video> elements
+          document.querySelectorAll('audio, video').forEach(el => { el.muted = muted; });
+          // Mute Web Audio via gain node if available
+          if (gainNode) gainNode.gain.value = muted ? 0 : 1;
+          btn.textContent = muted ? '🔇' : '🔊';
+          btn.setAttribute('aria-label', muted ? 'Unmute sound' : 'Mute sound');
+        }
+
+        // Keep newly created audio/video elements in sync
+        const observer = new MutationObserver(() => {
+          if (isMuted) {
+            document.querySelectorAll('audio, video').forEach(el => { el.muted = true; });
+          }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        btn.addEventListener('click', () => {
+          isMuted = !isMuted;
+          applyMute(isMuted);
+        });
+      })();
+    </script>
+
     <script>
       // 1. Rewarded ad trigger for hints
       window.triggerInterstitialForHint = function() {
