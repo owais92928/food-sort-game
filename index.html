@@ -35,9 +35,8 @@
     }
   });
 </script>
-
-  </head>
-  <body>
+</head>
+<body>
     <div id="root"></div>
     <!-- Fixed Position Banner Ad Overlay -->
 <div id="admob-header-banner" style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 9999; width: 320px; height: 50px; text-align: center;">
@@ -51,11 +50,10 @@
 </div>
   <script src="https://replit-cdn.com/replit-pill/replit-pill.global.js" data-referral-code="rlsvamk8i1mg" data-repl-id="7eb28cec-068c-420e-bcb7-a853ef16c1ca"></script>
 
-
 // Rewarded Interstitial Ad trigger for hints
 window.triggerInterstitialForHint = function() {
     if (typeof h5AdPlacementManager !== "undefined" && h5AdPlacementManager) {
-        h5AdPlacementManager.show({
+        h5AdPlacementManager.requestAdPlacement({
             adUnitId: "ca-pub-3940256099425544/5354046379",
             onAdOpened: () => {
                 console.log("Rewarded Interstitial opened.");
@@ -63,7 +61,7 @@ window.triggerInterstitialForHint = function() {
             onAdClosed: () => {
                 console.log("Rewarded Interstitial closed.");
             },
-            onUserEarnedReward: (reward) => {
+            onUserEarnedRewardListener: (reward) => {
                 console.log("Reward earned:", reward);
                 // UNLOCK HINT ONLY IF WATCHED SUCCESSFULLY
                 if {typeof window.showTheActualHint === "function"} {
@@ -79,23 +77,23 @@ window.triggerInterstitialForHint = function() {
     }
 };
             // 2. NEW: This ensures the hint is ONLY unlocked if they watch the required time
-            onUserEarnedReward: (reward) => {
+            onUserEarnedRewardListener: (reward) => {
                 console.log("User successfully earned reward!");
                 window.showTheActualHint();
                 alert("Ad complete! Hint unlocked.");
             },
             // 3. UPDATED: Removed hint unlocking from here so skipping grants no reward
-            onAdClosed: () => {
-                console.log("Ad window closed.");
-            },
-            onError: (error) => {
-                console.error("Ad failed to load:", error);
-                // Fallback: If ad breaks during testing, unlock hint so gameplay doesn't freeze
-                window.showTheActualHint();
-            }
-        });
+      onAdClosed: () => {
+        console.log("Ad window closed.");
+      }
+    });
+  } else {
+    // Fallback: If ad breaks during testing, unlock hint so gameplay doesn't freeze
+    if (typeof window.showTheActualHint === "function") {
+      window.showTheActualHint();
     }
-};
+  }
+};           
 // 🍽️ 2. MAIN ADD PLATE CLICK SYSTEM
 window.handleAddPlateClick = function() {
     alert("To add an extra plate, you must watch a short video.");
