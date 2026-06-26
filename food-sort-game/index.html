@@ -167,8 +167,6 @@
 
       // 2. Add Plate click system — rewarded ad for extra plate
       window.handleAddPlateClick = function() {
-        alert("To add an extra plate, you must watch a short video.");
-
         if (h5AdPlacementManager) {
           h5AdPlacementManager.requestAdPlacement({
             adUnitId: "ca-app-pub-3940256099942544/5224354917",
@@ -200,23 +198,38 @@
       let completedLevelCount = 0;
 
       document.addEventListener("click", function(event) {
-        const target = event.target;
-        const clickedText = target.innerText ? target.innerText.toLowerCase() : "";
-        const parent1Text = target.parentElement ? (target.parentElement.innerText || "").toLowerCase() : "";
-        const parent2Text = target.parentElement && target.parentElement.parentElement ? (target.parentElement.parentElement.innerText || "").toLowerCase() : "";
+        // Walk up to the nearest button or role="button" element
+        let target = event.target;
+        while (target && target !== document.body) {
+          if (target.tagName === 'BUTTON' || target.getAttribute('role') === 'button') break;
+          target = target.parentElement;
+        }
+        if (!target || target === document.body) return;
 
-        const isPlateZone = clickedText.includes("plate") ||
-                            parent1Text.includes("plate") ||
-                            parent2Text.includes("plate");
+        // Use only the direct text of the button, not nested children
+        const ownText = (target.innerText || target.textContent || "").trim().toLowerCase();
 
-        if (isPlateZone) {
-          console.log("Plate button detected! Triggering rewarded ad flow...");
+        // Only match buttons whose own text is specifically about adding a plate —
+        // NOT the subtitle "PLATE PUZZLE RESTAURANT" (which is not a button)
+        const isAddPlateButton = ownText.includes("add plate") ||
+                                 ownText.includes("extra plate") ||
+                                 ownText.includes("+plate") ||
+                                 ownText === "plate";
+
+        // Only match explicit level-completion action buttons
+        const isLevelCompleteButton = ownText === "next" ||
+                                      ownText === "next level" ||
+                                      ownText === "claim" ||
+                                      ownText === "claim reward";
+
+        if (isAddPlateButton) {
+          console.log("Add Plate button detected — triggering rewarded ad flow...");
           window.handleAddPlateClick();
-        } else if (clickedText.includes("next") || clickedText.includes("claim")) {
+        } else if (isLevelCompleteButton) {
           completedLevelCount++;
           console.log("Levels completed this session: " + completedLevelCount);
 
-          if (completedLevelCount > 0 && completedLevelCount % 3 === 0) {
+          if (completedLevelCount % 3 === 0) {
             if (typeof h5AdPlacementManager !== "undefined" && h5AdPlacementManager) {
               h5AdPlacementManager.requestAdPlacement({
                 adUnitId: "ca-app-pub-3940256099942544/1033173712",
