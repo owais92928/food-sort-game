@@ -170,7 +170,7 @@
         if (h5AdPlacementManager) {
           h5AdPlacementManager.requestAdPlacement({
             adUnitId: "ca-app-pub-3940256099942544/5224354917",
-            onUserEarnedReward: (reward) => {
+            onUserEarnedRewardListener: (reward) => {
               if (typeof window.executeAddPlateLogic === "function") {
                 window.executeAddPlateLogic();
               }
