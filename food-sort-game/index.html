@@ -157,7 +157,7 @@
         alert("To add an extra plate, you must watch a short video.");
 
         if (h5AdPlacementManager) {
-          h5AdPlacementManager.show({
+          h5AdPlacementManager.requestAdPlacement({
             adUnitId: "ca-app-pub-3940256099942544/5224354917",
             onUserEarnedReward: (reward) => {
               if (typeof window.executeAddPlateLogic === "function") {
@@ -205,7 +205,7 @@
 
           if (completedLevelCount > 0 && completedLevelCount % 3 === 0) {
             if (typeof h5AdPlacementManager !== "undefined" && h5AdPlacementManager) {
-              h5AdPlacementManager.show({
+              h5AdPlacementManager.requestAdPlacement({
                 adUnitId: "ca-app-pub-3940256099942544/1033173712",
                 onAdOpened: () => {
                   console.log("Level Interstitial ad opened.");
